@@ -22,17 +22,37 @@ class Chart(object):
     animation = None
     elements = None
     responsive = None
-    options = None
+    options = {'maintainAspectRatio': True}
 
     def __init__(self, height=None, width=None,
                  html_id=None, json_encoder_class=DjangoJSONEncoder):
-        self.height = height
-        self.width = width
-        self.json_encoder_class = json_encoder_class
-        self.html_id = html_id
+        try:
+            if self.height:
+                height = self.height
+        except AttributeError:
+            self.height = height
 
+        try:
+            if self.width:
+                width = self.width
+        except AttributeError:
+            self.width = width
+
+        try:
+            if self.json_encoder_class:
+                json_encoder_class = self.json_encoder_class
+        except AttributeError:
+            self.json_encoder_class=json_encoder_class
+
+        try:
+            if self.html_id:
+                html_id = self.html_id
+        except AttributeError:
+            self.html_id = html_id
+
+        # Disabled as not needed.
         if ((height is not None or width is not None) and
-                (self.responsive is None or self.responsive)):
+                (self.options['maintainAspectRatio'] == True )):
             raise ImproperlyConfigured(
                 'Using the height/width parameter will have no '
                 'effect if the chart is in responsive mode. '
